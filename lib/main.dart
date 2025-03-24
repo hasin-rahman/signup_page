@@ -41,8 +41,16 @@ class _SignupPageState extends State<SignupPage> {
             child: Column(
               children: [
                 FormBuilderTextField(
-                  name: 'name',
-                  decoration: const InputDecoration(labelText: 'Full Name'),
+                  name: 'first_name',
+                  decoration: const InputDecoration(labelText: 'First Name'),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                  ]),
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'last_name',
+                  decoration: const InputDecoration(labelText: 'Last Name'),
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(),
                   ]),
@@ -68,6 +76,23 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 const SizedBox(height: 16),
                 FormBuilderTextField(
+                  name: 'phone',
+                  decoration: const InputDecoration(labelText: 'Phone Number'),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.numeric(),
+                    FormBuilderValidators.minLength(10),
+                  ]),
+                  keyboardType: TextInputType.phone,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'address',
+                  decoration: const InputDecoration(labelText: 'Address'),
+                  validator: FormBuilderValidators.required(),
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
                   name: 'password',
                   obscureText: true,
                   decoration: const InputDecoration(labelText: 'Password'),
@@ -87,8 +112,10 @@ class _SignupPageState extends State<SignupPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder:
-                              (_) => ConfirmationPage(name: formData['name']),
+                          builder: (_) => ConfirmationPage(
+                            firstName: formData['first_name'],
+                            lastName: formData['last_name'],
+                          ),
                         ),
                       );
                     } else {
@@ -107,9 +134,10 @@ class _SignupPageState extends State<SignupPage> {
 }
 
 class ConfirmationPage extends StatelessWidget {
-  final String name;
+  final String firstName;
+  final String lastName;
 
-  const ConfirmationPage({super.key, required this.name});
+  const ConfirmationPage({super.key, required this.firstName, required this.lastName});
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +145,7 @@ class ConfirmationPage extends StatelessWidget {
       appBar: AppBar(title: const Text("Confirmation")),
       body: Center(
         child: Text(
-          "Welcome, $name!\nSignup Successful 🎉",
+          "Welcome, $firstName $lastName!\nSignup Successful",
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 20),
         ),
